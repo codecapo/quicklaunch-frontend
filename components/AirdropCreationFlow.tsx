@@ -1,20 +1,24 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
     Wallet,
     Circle,
     ClipboardCheck,
     CreditCard,
-    Sparkles
+    Rocket,
+    Upload,
+    Clipboard,
+    Calendar
 } from "lucide-react";
-import TokenCreationFAQButton from "@/components/TokenCreationFAQButton";
 
-type StepId = 'connect-wallet' | 'token-details' | 'review' | 'pay-fee' | 'create-token' | 'download-keypair';
+type StepId = 'connect-wallet' | 'airdrop-details' | 'review' | 'pay-fee' | 'deploy-airdrop';
 
 interface Step {
     id: StepId;
@@ -23,46 +27,44 @@ interface Step {
     description: string;
 }
 
-const TokenCreationFlow: React.FC = () => {
+const AirdropCreationFlow: React.FC = () => {
     const [currentStep, setCurrentStep] = useState<StepId>('connect-wallet');
     const [completedSteps, setCompletedSteps] = useState<StepId[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [addresses, setAddresses] = useState<string>('');
+    const [scheduledDate, setScheduledDate] = useState<string>('');
+    const [scheduledTime, setScheduledTime] = useState<string>('');
 
     const steps: Step[] = [
         {
             id: 'connect-wallet',
             title: 'Connect Wallet',
             icon: <Wallet className="h-4 w-4"/>,
-            description: 'Connect your wallet to continue with token creation',
+            description: 'Connect your wallet to continue with airdrop creation',
         },
         {
-            id: 'token-details',
-            title: 'Enter Token Details',
+            id: 'airdrop-details',
+            title: 'Enter Airdrop Details',
             icon: <Circle className="h-4 w-4"/>,
-            description: 'Provide the details for your new token',
+            description: 'Provide the details for your airdrop',
         },
         {
             id: 'review',
             title: 'Review Details',
             icon: <ClipboardCheck className="h-4 w-4"/>,
-            description: 'Review all token details before proceeding',
+            description: 'Review market maker details before proceeding',
         },
         {
             id: 'pay-fee',
             title: 'Pay Fee',
             icon: <CreditCard className="h-4 w-4"/>,
-            description: 'Pay the required fee to create your token',
+            description: 'Pay the required fee to create your airdrop',
         },
         {
-            id: 'create-token',
-            title: 'Create Token',
-            icon: <Sparkles className="h-4 w-4"/>,
-            description: 'Deploy your token to the blockchain',
-        },
-        {
-            id: 'download-keypair',
-            title: 'Download Keypair',
-            icon: <Sparkles className="h-4 w-4"/>,
-            description: 'Deploy your token to the blockchain',
+            id: 'deploy-airdrop',
+            title: 'Deploy Airdrop',
+            icon: <Rocket className="h-4 w-4"/>,
+            description: 'Deploy your airdrop to the blockchain',
         }
     ];
 
@@ -71,6 +73,18 @@ const TokenCreationFlow: React.FC = () => {
         const currentIndex = steps.findIndex(step => step.id === stepId);
         if (currentIndex < steps.length - 1) {
             setCurrentStep(steps[currentIndex + 1].id);
+        }
+    };
+
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target?.result as string;
+                setAddresses(text);
+            };
+            reader.readAsText(file);
         }
     };
 
@@ -92,8 +106,8 @@ const TokenCreationFlow: React.FC = () => {
                 return (
                     <div className="space-y-8">
                         <p>
-                            Make sure to connect only the wallet that contains the tokens you would like to create.
-                            You won't be able to change this wallet after deploying the token contract.
+                            Connect your wallet to proceed with the airdrop creation process.
+                            Only the connected wallet will have administration rights.
                         </p>
                         <Button
                             onClick={() => handleStepComplete('connect-wallet')}
@@ -103,15 +117,60 @@ const TokenCreationFlow: React.FC = () => {
                         </Button>
                     </div>
                 );
-            case 'token-details':
+            case 'airdrop-details':
                 return (
                     <div className="space-y-8">
-                        <Input placeholder="Token Name" />
-                        <Input placeholder="Token Symbol" />
-                        <Input placeholder="Token Description" />
-                        <Input placeholder="Total Supply" type="number" />
+                        <Tabs defaultValue="paste" className="w-full">
+                            <TabsList className="grid w-full grid-cols-2">
+                                <TabsTrigger value="paste" className="flex items-center gap-2">
+                                    <Clipboard className="h-4 w-4" />
+                                    Copy and Paste
+                                </TabsTrigger>
+                                <TabsTrigger value="upload" className="flex items-center gap-2">
+                                    <Upload className="h-4 w-4" />
+                                    Upload CSV
+                                </TabsTrigger>
+                            </TabsList>
+                            <TabsContent value="paste" className="space-y-4">
+                                <Textarea
+                                    placeholder="Enter addresses (one per line)"
+                                    value={addresses}
+                                    onChange={(e) => setAddresses(e.target.value)}
+                                    className="min-h-[200px]"
+                                />
+                            </TabsContent>
+                            <TabsContent value="upload" className="space-y-4">
+                                <Input
+                                    type="file"
+                                    accept=".csv"
+                                    ref={fileInputRef}
+                                    onChange={handleFileUpload}
+                                    className="cursor-pointer"
+                                />
+                            </TabsContent>
+                        </Tabs>
+
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-2">
+                                <Calendar className="h-4 w-4" />
+                                <span>Schedule Date/Time</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <Input
+                                    type="date"
+                                    value={scheduledDate}
+                                    onChange={(e) => setScheduledDate(e.target.value)}
+                                />
+                                <Input
+                                    type="time"
+                                    value={scheduledTime}
+                                    onChange={(e) => setScheduledTime(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
                         <Button
-                            onClick={() => handleStepComplete('token-details')}
+                            onClick={() => handleStepComplete('airdrop-details')}
                             variant="outline"
                         >
                             Continue
@@ -121,19 +180,26 @@ const TokenCreationFlow: React.FC = () => {
             case 'review':
                 return (
                     <div className="space-y-8">
-                        <p>Review your token details before proceeding.</p>
+                        <div className="space-y-4">
+                            <h3 className="font-medium">Market Maker Details</h3>
+                            <div className="space-y-2">
+                                <p>Number of Addresses: {addresses.split('\n').filter(a => a.trim()).length}</p>
+                                <p>Scheduled Date: {scheduledDate}</p>
+                                <p>Scheduled Time: {scheduledTime}</p>
+                            </div>
+                        </div>
                         <Button
                             onClick={() => handleStepComplete('review')}
                             variant="outline"
                         >
-                            Continue
+                            Confirm Details
                         </Button>
                     </div>
                 );
             case 'pay-fee':
                 return (
                     <div className="space-y-4">
-                        <p>Pay the required fee to create your token.</p>
+                        <p>Pay the required fee to create your airdrop.</p>
                         <Button
                             onClick={() => handleStepComplete('pay-fee')}
                             variant="outline"
@@ -142,36 +208,25 @@ const TokenCreationFlow: React.FC = () => {
                         </Button>
                     </div>
                 );
-            case 'create-token':
+            case 'deploy-airdrop':
                 return (
                     <div className="space-y-4">
-                        <p>Deploy your token to the blockchain.</p>
+                        <p>Deploy your airdrop to the blockchain.</p>
                         <Button
-                            onClick={() => handleStepComplete('create-token')}
+                            onClick={() => handleStepComplete('deploy-airdrop')}
                             variant="outline"
                         >
-                            Create Token
+                            Deploy Airdrop
                         </Button>
                     </div>
                 );
             default:
-                return (
-                    <div className="space-y-4">
-                        <p>{step.description}</p>
-                        <Button
-                            onClick={() => handleStepComplete(step.id)}
-                            variant="outline"
-                        >
-                            Continue
-                        </Button>
-                    </div>
-                );
+                return null;
         }
     };
 
     return (
         <div className="w-full">
-            <TokenCreationFAQButton/>
             <Card className="relative w-full rounded-xl">
                 <CardContent className="p-6">
                     {/* Progress Section */}
@@ -191,7 +246,7 @@ const TokenCreationFlow: React.FC = () => {
                         </div>
 
                         {/* Progress Steps */}
-                        <div className="w-full grid grid-cols-6 gap-x-4">
+                        <div className="w-full grid grid-cols-5 gap-x-4">
                             {steps.map((step) => (
                                 <div
                                     key={step.id}
@@ -248,4 +303,4 @@ const TokenCreationFlow: React.FC = () => {
     );
 };
 
-export default TokenCreationFlow;
+export default AirdropCreationFlow;

@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sidebar"
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible"
 import {
-    ShoppingBag,
     Rocket,
     Repeat,
     PlayCircle,
@@ -26,7 +25,7 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 
 export function AppSidebar() {
     return (
-        <Sidebar variant="inset" collapsible="icon">
+        <Sidebar variant="floating" collapsible="icon">
             <SidebarRail/>
             <SidebarHeader>
                 <div className="grid grid-cols-2">
@@ -64,15 +63,15 @@ export function AppSidebar() {
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/mint/token" className="flex items-center">
-                                            <GanttChartSquare className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Token</span>
-                                        </a>
-                                    </SidebarMenuSubItem>
-                                    <SidebarMenuSubItem>
                                         <a href="/mint/view" className="flex items-center">
                                             <SmilePlus className="h-4 w-4 mr-2 ml-2"/>
                                             <span>View</span>
+                                        </a>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <a href="/mint/token" className="flex items-center">
+                                            <GanttChartSquare className="h-4 w-4 mr-2 ml-2"/>
+                                            <span>Token</span>
                                         </a>
                                     </SidebarMenuSubItem>
                                 </SidebarMenuSub>
@@ -96,15 +95,15 @@ export function AppSidebar() {
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/launch/create" className="flex items-center">
-                                            <Timer className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Create Presale</span>
+                                        <a href="/launch/list" className="flex items-center">
+                                            <Clock className="h-4 w-4 mr-2 ml-2"/>
+                                            <span>View</span>
                                         </a>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/launch/list" className="flex items-center">
-                                            <Clock className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>List Presales</span>
+                                        <a href="/launch/create" className="flex items-center">
+                                            <Timer className="h-4 w-4 mr-2 ml-2"/>
+                                            <span>Presale</span>
                                         </a>
                                     </SidebarMenuSubItem>
                                     {/*<SidebarMenuSubItem>*/}
@@ -147,13 +146,19 @@ export function AppSidebar() {
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/run/airdrop" className="flex items-center">
+                                        <a href="/run/view" className="flex items-center">
+                                            <TrendingUp className="h-4 w-4 mr-2 ml-2"/>
+                                            <span>View</span>
+                                        </a>
+                                    </SidebarMenuSubItem>
+                                    <SidebarMenuSubItem>
+                                        <a href="/run/create/airdrop" className="flex items-center">
                                             <Gift className="h-4 w-4 mr-2 ml-2"/>
                                             <span>Airdrop</span>
                                         </a>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/run/market-maker" className="flex items-center">
+                                        <a href="/run/create/market-maker" className="flex items-center">
                                             <TrendingUp className="h-4 w-4 mr-2 ml-2"/>
                                             <span>Market Maker</span>
                                         </a>
