@@ -16,7 +16,7 @@ const TokenCard: React.FC<TokenCardProps> = ({ token }) => {
     const timeAgo = formatDistance(new Date(token.createdAt), new Date(), { addSuffix: true });
 
     return (
-        <Link href={`/mint/view/${token.symbol}`} className="block">
+        <Link href={`/dashboard/mint/view/${token.symbol}`} className="block">
             <Card className="w-full hover:shadow-md transition-all hover:scale-[1.02] cursor-pointer">
                 <CardContent className="p-6">
                     <div className="flex items-start space-x-4">

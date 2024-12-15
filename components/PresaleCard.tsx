@@ -93,7 +93,7 @@ const PresaleCard: React.FC<PresaleCardProps> = ({ presale }) => {
                     <Button variant="ghost" size="icon">
                         <Heart className="h-5 w-5" />
                     </Button>
-                    <Link href={`/launch/list/${id}`}>
+                    <Link href={`/dashboard/launch/list/${id}`}>
                         <Button>View</Button>
                     </Link>
                 </div>

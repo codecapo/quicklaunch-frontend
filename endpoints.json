@@ -1,0 +1,19 @@
+{
+  "server": {
+    "host": "http://localhost:4000/"
+  },
+  "routes": {
+    "createAuthRequest": {
+      "path": "user/auth"
+    },
+    "signInRequest": {
+      "path": "user/sign-in"
+    },
+    "createMintTokenRequest": {
+      "path": "spl/create-mint"
+    },
+    "negotiateWebPubSub" : {
+      "path": "negotiate"
+    }
+  }
+}

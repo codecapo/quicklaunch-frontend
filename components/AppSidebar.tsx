@@ -3,11 +3,13 @@ import {
     SidebarContent,
     SidebarMenu,
     SidebarMenuItem,
-    SidebarMenuButton,
     SidebarMenuSub,
-    SidebarMenuSubItem, SidebarRail, SidebarFooter, SidebarHeader
+    SidebarMenuSubItem,
+    SidebarRail,
+    SidebarFooter,
+    SidebarHeader
 } from "@/components/ui/sidebar"
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import {
     Rocket,
     Repeat,
@@ -18,61 +20,60 @@ import {
     Clock,
     GanttChartSquare,
     Gift,
-    TrendingUp, ChevronRight,
-    ChevronUp, User2, Activity
+    TrendingUp,
+    ChevronRight,
+    ChevronUp,
+    User2,
+    Activity,
+    Wallet
 } from "lucide-react"
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useWallet } from '@solana/wallet-adapter-react'
+import { Button } from "@/components/ui/button"
 
 export function AppSidebar() {
+    const { connected, publicKey } = useWallet()
+
+    const truncateAddress = (address: string): string => {
+        if (!address) return 'Invalid Address'
+        const start = address.slice(0, 4)
+        const end = address.slice(-4)
+        return `${start}...${end}`
+    }
+
     return (
         <Sidebar variant="floating" collapsible="icon">
-            <SidebarRail/>
+            <SidebarRail />
             <SidebarHeader>
                 <div className="grid grid-cols-2">
-                    <Activity className="w-6 ml-1"/>
+                    <Activity className="w-6 ml-1" />
                 </div>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarMenu>
-                    {/* Buy Menu */}
-                    {/*<Collapsible defaultOpen className="group/collapsible">*/}
-                    {/*    <SidebarMenuItem>*/}
-                    {/*        <CollapsibleTrigger asChild>*/}
-                    {/*            <SidebarMenuButton className="flex items-center" asChild>*/}
-                    {/*                <a href="/buy">*/}
-                    {/*                    <ShoppingBag className="h-6 w-6 ml-2 mr-2"/>*/}
-                    {/*                    <span className="text-base font-extrabold">Buy</span>*/}
-                    {/*                </a>*/}
-                    {/*            </SidebarMenuButton>*/}
-                    {/*        </CollapsibleTrigger>*/}
-                    {/*    </SidebarMenuItem>*/}
-                    {/*</Collapsible>*/}
-
                     {/* Mint Menu */}
                     <Collapsible defaultOpen className="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                                <SidebarMenuButton>
-
-                                    <Sparkles className="h-6 w-6 ml-2 mr-2"/>
+                                <div className="flex w-full items-center">
+                                    <Sparkles className="h-6 w-6 ml-2 mr-2" />
                                     <span className="text-base font-extrabold">Mint</span>
-                                    <ChevronRight
-                                        className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"/>
-                                </SidebarMenuButton>
+                                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                </div>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/mint/view" className="flex items-center">
-                                            <SmilePlus className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>View</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <SmilePlus className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/mint/view">View</a>
+                                        </div>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/mint/token" className="flex items-center">
-                                            <GanttChartSquare className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Token</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <GanttChartSquare className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/mint/token">Token</a>
+                                        </div>
                                     </SidebarMenuSubItem>
                                 </SidebarMenuSub>
                             </CollapsibleContent>
@@ -83,98 +84,71 @@ export function AppSidebar() {
                     <Collapsible defaultOpen className="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                                <SidebarMenuButton className="flex items-center">
-
-                                    <Rocket className="h-6 w-6 ml-2 mr-2"/>
+                                <div className="flex w-full items-center">
+                                    <Rocket className="h-6 w-6 ml-2 mr-2" />
                                     <span className="text-base font-extrabold">Launch</span>
-                                    <ChevronRight
-                                        className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"/>
-
-                                </SidebarMenuButton>
+                                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                </div>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/launch/list" className="flex items-center">
-                                            <Clock className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>View</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <Clock className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/launch/list">View</a>
+                                        </div>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/launch/create" className="flex items-center">
-                                            <Timer className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Presale</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <Timer className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/launch/create">Presale</a>
+                                        </div>
                                     </SidebarMenuSubItem>
-                                    {/*<SidebarMenuSubItem>*/}
-                                    {/*    <a href="/launch/close" className="flex items-center">*/}
-                                    {/*        <Timer className="h-4 w-4 mr-2 ml-2"/>*/}
-                                    {/*        <span>List Presales</span>*/}
-                                    {/*    </a>*/}
-                                    {/*</SidebarMenuSubItem>*/}
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </SidebarMenuItem>
                     </Collapsible>
 
-                    {/* Swap - Single Item */}
-                    <Collapsible defaultOpen className="group/collapsible">
-                        <SidebarMenuItem>
-                            <CollapsibleTrigger asChild>
-                                <SidebarMenuButton className="flex items-center">
-                                    <a href="/swap" className="flex items-center">
-
-                                        <Repeat className="h-6 w-6 mr-2 ml-2"/>
-                                        <span className="text-base font-extrabold">Swap</span>
-                                    </a>
-                                </SidebarMenuButton>
-                            </CollapsibleTrigger>
-                        </SidebarMenuItem>
-                    </Collapsible>
+                    {/* Swap Menu */}
+                    <SidebarMenuItem>
+                        <div className="flex w-full items-center">
+                            <a href="/swap" className="flex items-center">
+                                <Repeat className="h-6 w-6 mr-2 ml-2" />
+                                <span className="text-base font-extrabold">Swap</span>
+                            </a>
+                        </div>
+                    </SidebarMenuItem>
 
                     {/* Run Menu */}
                     <Collapsible defaultOpen className="group/collapsible">
                         <SidebarMenuItem>
                             <CollapsibleTrigger asChild>
-                                <SidebarMenuButton className="flex items-center">
-                                    <PlayCircle className="h-6 w-6 mr-2 ml-2"/>
+                                <div className="flex w-full items-center">
+                                    <PlayCircle className="h-6 w-6 mr-2 ml-2" />
                                     <span className="text-base font-extrabold">Run</span>
-                                    <ChevronRight
-                                        className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90"/>
-                                </SidebarMenuButton>
+                                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                </div>
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <SidebarMenuSub>
                                     <SidebarMenuSubItem>
-                                        <a href="/run/view" className="flex items-center">
-                                            <TrendingUp className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>View</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <TrendingUp className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/run/view">View</a>
+                                        </div>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/run/create/airdrop" className="flex items-center">
-                                            <Gift className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Airdrop</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <Gift className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/run/create/airdrop">Airdrop</a>
+                                        </div>
                                     </SidebarMenuSubItem>
                                     <SidebarMenuSubItem>
-                                        <a href="/run/create/market-maker" className="flex items-center">
-                                            <TrendingUp className="h-4 w-4 mr-2 ml-2"/>
-                                            <span>Market Maker</span>
-                                        </a>
+                                        <div className="flex items-center">
+                                            <TrendingUp className="h-4 w-4 mr-2 ml-2" />
+                                            <a href="/dashboard/run/create/market-maker">Market Maker</a>
+                                        </div>
                                     </SidebarMenuSubItem>
-                                    {/*<SidebarMenuSubItem>*/}
-                                    {/*    <a href="/run/market-maker" className="flex items-center">*/}
-                                    {/*        <TrendingUp className="h-4 w-4 mr-2 ml-2"/>*/}
-                                    {/*        <span>Royalty Distribution</span>*/}
-                                    {/*    </a>*/}
-                                    {/*</SidebarMenuSubItem>*/}
-                                    {/*<SidebarMenuSubItem>*/}
-                                    {/*    <a href="/run/market-maker" className="flex items-center">*/}
-                                    {/*        <TrendingUp className="h-4 w-4 mr-2 ml-2"/>*/}
-                                    {/*        <span>Cronjob</span>*/}
-                                    {/*    </a>*/}
-                                    {/*</SidebarMenuSubItem>*/}
                                 </SidebarMenuSub>
                             </CollapsibleContent>
                         </SidebarMenuItem>
@@ -186,24 +160,38 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <User2/> Username
-                                    <ChevronUp className="ml-auto"/>
-                                </SidebarMenuButton>
+                                <div className="flex w-full items-center px-2 py-2">
+                                    {connected && publicKey ? (
+                                        <Wallet className="h-4 w-4 mr-2" />
+                                    ) : (
+                                        <User2 className="h-4 w-4 mr-2" />
+                                    )}
+                                    <span>
+                                        {connected && publicKey
+                                            ? truncateAddress(publicKey.toBase58())
+                                            : connected}
+                                    </span>
+                                    <ChevronUp className="ml-auto" />
+                                </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 side="top"
                                 className="w-[--radix-popper-anchor-width]"
                             >
-                                <DropdownMenuItem>
-                                    <span>Account</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Billing</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Sign out</span>
-                                </DropdownMenuItem>
+                                    {connected ? (
+                                    <>
+                                        <DropdownMenuItem>
+                                            <span>View Account</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <span>Disconnect</span>
+                                        </DropdownMenuItem>
+                                    </>
+                                ) : (
+                                    <DropdownMenuItem>
+                                        <span>Connect Wallet</span>
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </SidebarMenuItem>

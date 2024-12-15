@@ -1,0 +1,32 @@
+.wallet-adapter-button {
+    background-color: hsl(var(--primary)) !important;
+    color: hsl(var(--primary-foreground)) !important;
+}
+
+.wallet-adapter-button:hover {
+    background-color: hsl(var(--primary) / 0.9) !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+    background-color: hsl(var(--primary) / 0.9) !important;
+}
+
+/* Modal styles */
+.wallet-adapter-modal-wrapper {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+    border-color: hsl(var(--border)) !important;
+}
+
+.wallet-adapter-modal-button-close {
+    background-color: hsl(var(--primary)) !important;
+}
+
+.wallet-adapter-modal-list-more {
+    color: hsl(var(--primary)) !important;
+}
+
+.wallet-adapter-modal-list li:hover {
+    background-color: hsl(var(--accent) / 0.1) !important;
+}
+
