@@ -19,3 +19,6 @@ export default function PresalesPage() {
         </div>
     );
 }
+
+// Add to each affected page file
+export const dynamic = 'force-dynamic'

@@ -14,8 +14,6 @@ import {
     Send,
     Facebook,
     Instagram,
-    Clock,
-    Info,
     Copy
 } from "lucide-react";
 

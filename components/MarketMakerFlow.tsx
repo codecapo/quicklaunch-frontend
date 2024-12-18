@@ -12,7 +12,6 @@ import {
     ClipboardCheck,
     CreditCard,
     Rocket,
-    Clock
 } from "lucide-react";
 
 type StepId = 'connect-wallet' | 'market-maker-details' | 'review' | 'pay-fee' | 'deploy';

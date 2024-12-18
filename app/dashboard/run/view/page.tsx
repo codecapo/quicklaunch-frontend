@@ -115,3 +115,5 @@ const RunViewPage = () => {
 };
 
 export default RunViewPage;
+
+export const dynamic = 'force-dynamic'

@@ -9,6 +9,10 @@ const nextConfig = {
         '@solana/wallet-adapter-react-ui',
         '@solana/wallet-adapter-wallets',
     ],
+    env: {
+        AUTH_SECRET: process.env.AUTH_SECRET,
+        NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    },
 };
 
 export default nextConfig;

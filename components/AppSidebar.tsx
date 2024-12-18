@@ -28,11 +28,22 @@ import {
     Wallet
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useWallet } from '@solana/wallet-adapter-react'
-import { Button } from "@/components/ui/button"
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react'
+import { useSession, signOut } from "next-auth/react"
 
 export function AppSidebar() {
-    const { connected, publicKey } = useWallet()
+    const { data: session } = useSession()
+    const { connected, publicKey, disconnect } = useWallet() as WalletContextState
+
+    const handleDisconnect = async () => {
+        await disconnect()
+        await signOut({ redirect: true, callbackUrl: '/' })
+        localStorage.removeItem("access_token")
+    }
+
+    if (!session || !connected) {
+        return null
+    }
 
     const truncateAddress = (address: string): string => {
         if (!address) return 'Invalid Address'
@@ -112,7 +123,7 @@ export function AppSidebar() {
                     {/* Swap Menu */}
                     <SidebarMenuItem>
                         <div className="flex w-full items-center">
-                            <a href="/swap" className="flex items-center">
+                            <a href="/dashboard/swap" className="flex items-center">
                                 <Repeat className="h-6 w-6 mr-2 ml-2" />
                                 <span className="text-base font-extrabold">Swap</span>
                             </a>
@@ -178,12 +189,12 @@ export function AppSidebar() {
                                 side="top"
                                 className="w-[--radix-popper-anchor-width]"
                             >
-                                    {connected ? (
+                                {connected ? (
                                     <>
                                         <DropdownMenuItem>
                                             <span>View Account</span>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={handleDisconnect}>
                                             <span>Disconnect</span>
                                         </DropdownMenuItem>
                                     </>

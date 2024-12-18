@@ -21,3 +21,4 @@ export default function Airdrop() {
         </div>
     );
 }
+export const dynamic = 'force-dynamic'

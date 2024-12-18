@@ -20,3 +20,6 @@ export default function CreateLaunchPage() {
         </div>
     );
 }
+
+// Add to each affected page file
+export const dynamic = 'force-dynamic'

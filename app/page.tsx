@@ -1,16 +1,10 @@
 // app/page.tsx
-import { Metadata } from "next"
-import { AppClient } from "./client"
+import { AppClient } from '@/components/AppClient'
 
-export const metadata: Metadata = {
-    title: "Welcome | Acme Inc",
-    description: "Connect your wallet to get started",
-}
-
-export default function HomePage() {
+export default function Page() {
     return (
-        <main className="min-h-screen flex items-center justify-center p-4">
+        <div className="flex min-h-screen items-center justify-center">
             <AppClient />
-        </main>
+        </div>
     )
 }

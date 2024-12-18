@@ -10,3 +10,4 @@ export default function Run() {
 
     )
 }
+export const dynamic = 'force-dynamic'

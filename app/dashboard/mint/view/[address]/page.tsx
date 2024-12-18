@@ -51,20 +51,4 @@ export default async function TokenDetailPage({ params }: PageProps) {
         </div>
     )
 }
-
-export function Loading() {
-    return (
-        <div className="w-full min-w-0">
-            <div className="flex flex-col gap-8 w-full animate-pulse">
-                <div>
-                    <div className="h-8 w-48 bg-muted rounded mb-2" />
-                    <div className="h-4 w-96 bg-muted rounded" />
-                </div>
-                <div className="space-y-4">
-                    <div className="h-40 bg-muted rounded" />
-                    <div className="h-40 bg-muted rounded" />
-                </div>
-            </div>
-        </div>
-    )
-}
+export const dynamic = 'force-dynamic'
