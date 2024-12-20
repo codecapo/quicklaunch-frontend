@@ -21,4 +21,3 @@ export default function Utility() {
         </div>
     );
 }
-export const dynamic = 'force-dynamic'

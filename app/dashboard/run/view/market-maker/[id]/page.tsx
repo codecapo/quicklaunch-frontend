@@ -22,4 +22,3 @@ export default function MarketMakerDetailPage() {
     );
 }
 
-export const dynamic = 'force-dynamic'

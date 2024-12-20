@@ -21,4 +21,3 @@ export default function MarketMakerPage() {
         </div>
     );
 }
-export const dynamic = 'force-dynamic'

@@ -21,4 +21,3 @@ export default function TokensPage() {
         </div>
     );
 }
-export const dynamic = 'force-dynamic'

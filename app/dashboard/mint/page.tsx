@@ -19,4 +19,3 @@ export default function Mint() {
 
     )
 }
-export const dynamic = 'force-dynamic'

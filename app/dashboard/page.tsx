@@ -19,4 +19,3 @@ export default function Dashboard() {
 
     )
 }
-export const dynamic = 'force-dynamic'

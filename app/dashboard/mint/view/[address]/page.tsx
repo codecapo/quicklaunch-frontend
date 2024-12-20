@@ -51,4 +51,3 @@ export default async function TokenDetailPage({ params }: PageProps) {
         </div>
     )
 }
-export const dynamic = 'force-dynamic'

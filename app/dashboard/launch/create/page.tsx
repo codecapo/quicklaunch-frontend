@@ -22,4 +22,3 @@ export default function CreateLaunchPage() {
 }
 
 // Add to each affected page file
-export const dynamic = 'force-dynamic'

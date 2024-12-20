@@ -21,4 +21,3 @@ export default function SwapPage() {
         </div>
     );
 }
-export const dynamic = 'force-dynamic'
