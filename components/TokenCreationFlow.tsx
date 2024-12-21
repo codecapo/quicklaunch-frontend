@@ -5,18 +5,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-
 import {
     Wallet,
     Circle,
     ClipboardCheck,
     CreditCard,
-    Sparkles
+    Sparkles,
 } from "lucide-react";
 import TokenCreationFAQButton from "@/components/TokenCreationFAQButton";
-import {useToast} from "@/hooks/use-toast";
-import {createToken} from "@/app/actions/mint";
+import { useToast } from "@/hooks/use-toast";
+import { createToken } from "@/app/actions/mint";
 import PayFeeStep from "@/components/PayFeeStep";
+import { useWallet, WalletContextState } from '@solana/wallet-adapter-react';
 
 type StepId = 'connect-wallet' | 'token-details' | 'review' | 'pay-fee' | 'create-token' | 'download-keypair';
 
@@ -33,6 +33,7 @@ const TokenCreationFlow: React.FC = () => {
     const formRef = useRef<HTMLFormElement>(null);
     const { toast } = useToast();
     const [formErrors, setFormErrors] = useState<Record<string, string[]>>({});
+    const { publicKey } = useWallet() as WalletContextState;
 
     const [formData, setFormData] = useState({
         name: '',
@@ -41,51 +42,6 @@ const TokenCreationFlow: React.FC = () => {
         mintAmount: '',
         image: null as File | null,
     });
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setFormErrors({});
-
-        // Get access token from localStorage
-        const accessToken = localStorage.getItem('access_token');
-        if (!accessToken) {
-            toast({
-                title: "Error",
-                description: "Please login to continue",
-                variant: "destructive",
-            });
-            return;
-        }
-
-        const formData = new FormData(event.currentTarget);
-        formData.append('accessToken', accessToken);
-
-        try {
-            const result = await createToken({}, formData);
-
-            if (result.errors) {
-                setFormErrors(result.errors);
-                toast({
-                    title: "Error",
-                    description: result.message || "Failed to create token",
-                    variant: "destructive",
-                });
-            } else {
-                toast({
-                    title: "Success",
-                    description: result.message || "Token created successfully",
-                });
-                handleStepComplete('create-token');
-            }
-        } catch (error) {
-            console.log(error);
-            toast({
-                title: "Error",
-                description: "Failed to create token",
-                variant: "destructive",
-            });
-        }
-    };
 
     const steps: Step[] = [
         {
@@ -134,6 +90,90 @@ const TokenCreationFlow: React.FC = () => {
         }
     };
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setFormErrors({});
+
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            toast({
+                title: "Error",
+                description: "Please login to continue",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const formData = new FormData(event.currentTarget);
+        formData.append('accessToken', accessToken);
+
+        try {
+            const result = await createToken({}, formData);
+
+            if (result.errors) {
+                setFormErrors(result.errors);
+                toast({
+                    title: "Error",
+                    description: result.message || "Failed to create token",
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Success",
+                    description: result.message || "Token created successfully",
+                });
+                handleStepComplete('create-token');
+            }
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: "Error",
+                description: "Failed to create token",
+                variant: "destructive",
+            });
+        }
+    };
+
+    const renderWalletCheck = () => {
+        const truncateAddress = (address: string): string => {
+            if (!address) return 'Invalid Address';
+            const start = address.slice(0, 4);
+            const end = address.slice(-4);
+            return `${start}...${end}`;
+        };
+
+        const walletAddress = publicKey ? truncateAddress(publicKey.toBase58()) : '';
+
+        if (isStepCompleted('connect-wallet')) {
+            return (
+                <div className="flex items-center gap-2 py-2">
+                    <Wallet className="h-4 w-4" />
+                    <span className="text-sm text-muted-foreground">{walletAddress}</span>
+                    <span className="text-xs text-muted-foreground ml-2">(Completed)</span>
+                </div>
+            );
+        }
+
+        return (
+            <div className="space-y-4">
+                <div className="flex items-center justify-between p-2">
+                    <div className="flex items-center gap-2">
+                        <Wallet className="h-4 w-4" />
+                        <span className="text-sm">{walletAddress}</span>
+                    </div>
+                </div>
+
+                <Button
+                    onClick={() => handleStepComplete('connect-wallet')}
+                    className=""
+                    variant="outline"
+                >
+                    Continue
+                </Button>
+            </div>
+        );
+    };
+
     const isStepCompleted = (stepId: StepId): boolean => completedSteps.includes(stepId);
 
     const isStepAvailable = (stepId: StepId): boolean => {
@@ -149,20 +189,7 @@ const TokenCreationFlow: React.FC = () => {
     const renderStepContent = (step: Step) => {
         switch (step.id) {
             case 'connect-wallet':
-                return (
-                    <div className="space-y-8">
-                        <p>
-                            Make sure to connect only the wallet that contains the tokens you would like to create.
-                            You wont be able to change this wallet after deploying the token contract.
-                        </p>
-                        <Button
-                            onClick={() => handleStepComplete('connect-wallet')}
-                            variant="outline"
-                        >
-                            Select Wallet
-                        </Button>
-                    </div>
-                );
+                return renderWalletCheck();
             case 'token-details':
                 return (
                     <form ref={formRef} onSubmit={handleSubmit} className="space-y-8">
